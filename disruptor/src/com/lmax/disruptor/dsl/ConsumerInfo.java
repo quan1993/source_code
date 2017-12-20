@@ -17,6 +17,9 @@ interface ConsumerInfo
 
     void halt();
 
+    /**
+     * 将该EventProcessor设置为非链尾，将链尾标志设为false
+     */
     void markAsUsedInBarrier();
 
     boolean isRunning();

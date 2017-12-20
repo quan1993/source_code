@@ -125,12 +125,18 @@ public final class BatchEventProcessor<T>
             {
                 try
                 {
+                	/**
+                	 * 根据要获取的值的下标（nextSequence）从RingBuffer中获得可以消费的值的最大下表（availableSequence）
+                	 */
                     final long availableSequence = sequenceBarrier.waitFor(nextSequence);
                     if (batchStartAware != null)
                     {
                         batchStartAware.onBatchStart(availableSequence - nextSequence + 1);
                     }
 
+                    /**
+                     * 消费所有可消费的值，即availableSequence之前的所有值
+                     */
                     while (nextSequence <= availableSequence)
                     {
                         event = dataProvider.get(nextSequence);
@@ -138,6 +144,10 @@ public final class BatchEventProcessor<T>
                         nextSequence++;
                     }
 
+                    /**
+                     * 设置消费者处理RingBuffer中数据，处理到的位置
+                     * 并不是严格增1，因此可能出现批量存批量取的现象
+                     */
                     sequence.set(availableSequence);
                 }
                 catch (final TimeoutException e)

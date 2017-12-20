@@ -26,6 +26,9 @@ import java.util.*;
  */
 class ConsumerRepository<T> implements Iterable<ConsumerInfo>
 {
+	/**
+	 * IdentityHashMap
+	 */
     private final Map<EventHandler<?>, EventProcessorInfo<T>> eventProcessorInfoByEventHandler =
         new IdentityHashMap<EventHandler<?>, EventProcessorInfo<T>>();
     private final Map<Sequence, ConsumerInfo> eventProcessorInfoBySequence =
@@ -91,6 +94,10 @@ class ConsumerRepository<T> implements Iterable<ConsumerInfo>
         return getEventProcessorFor(handler).getSequence();
     }
 
+    /**
+     * 将barrierEventProcessors设置为非链尾
+     * @param barrierEventProcessors
+     */
     public void unMarkEventProcessorsAsEndOfChain(final Sequence... barrierEventProcessors)
     {
         for (Sequence barrierEventProcessor : barrierEventProcessors)

@@ -139,12 +139,20 @@ public final class WorkProcessor<T>
 
                 if (cachedAvailableSequence >= nextSequence)
                 {
+                	/**
+                	 * 当可消费sequence值  大于等于 nextSequence上的元素
+                	 * 
+                	 */
                     event = ringBuffer.get(nextSequence);
                     workHandler.onEvent(event);
                     processedSequence = true;
                 }
                 else
                 {
+                	/**
+                	 * 当可消费sequence值  小于  nextSequence上的元素， 不可消费，需等待
+                	 * 
+                	 */
                     cachedAvailableSequence = sequenceBarrier.waitFor(nextSequence);
                 }
             }
