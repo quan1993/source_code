@@ -83,6 +83,7 @@ public class Disruptor<T>
 
     /**
      * Create a new Disruptor.
+     * RingBuffer会在初始化时将内部每个Event实例化
      *
      * @deprecated Use a {@link ThreadFactory} instead of an {@link Executor} as a the ThreadFactory
      * is able to report errors when it is unable to construct a thread to run a producer.

@@ -87,6 +87,7 @@ public final class MultiProducerSequencer extends AbstractSequencer
 	private final int indexMask;
 	/**
 	 * log(2, bufferSize), 
+	 * 
 	 */
 	private final int indexShift;
 
@@ -338,27 +339,27 @@ public final class MultiProducerSequencer extends AbstractSequencer
 	private void setAvailableBufferValue(int index, int flag)
 	{
 		long bufferAddress = (index * SCALE) + BASE;
-		  /***
-		   * Sets the value of the integer field at the specified offset in the
-		   * supplied object to the given value.  This is an ordered or lazy
-		   * version of <code>putIntVolatile(Object,long,int)</code>, which
-		   * doesn't guarantee the immediate visibility of the change to other
-		   * threads.  It is only really useful where the integer field is
-		   * <code>volatile</code>, and is thus expected to change unexpectedly.
-		   * 设置obj对象中offset偏移地址对应的整型field的值为指定值。这是一个有序或者
-		   * 有延迟的<code>putIntVolatile</cdoe>方法，并且不保证值的改变被其他线程立
-		   * 即看到。只有在field被<code>volatile</code>修饰并且期望被意外修改的时候
-		   * 使用才有用。
-		   * 
-		   * @param obj the object containing the field to modify.
-		   *    包含需要修改field的对象
-		   * @param offset the offset of the integer field within <code>obj</code>.
-		   *       <code>obj</code>中整型field的偏移量
-		   * @param value the new value of the field.
-		   *      field将被设置的新值
-		   * @see #putIntVolatile(Object,long,int)
+		/***
+		 * Sets the value of the integer field at the specified offset in the
+		 * supplied object to the given value.  This is an ordered or lazy
+		 * version of <code>putIntVolatile(Object,long,int)</code>, which
+		 * doesn't guarantee the immediate visibility of the change to other
+		 * threads.  It is only really useful where the integer field is
+		 * <code>volatile</code>, and is thus expected to change unexpectedly.
+		 * 设置obj对象中offset偏移地址对应的整型field的值为指定值。这是一个有序或者
+		 * 有延迟的<code>putIntVolatile</cdoe>方法，并且不保证值的改变被其他线程立
+		 * 即看到。只有在field被<code>volatile</code>修饰并且期望被意外修改的时候
+		 * 使用才有用。
+		 * 
+		 * @param obj the object containing the field to modify.
+		 *    包含需要修改field的对象
+		 * @param offset the offset of the integer field within <code>obj</code>.
+		 *       <code>obj</code>中整型field的偏移量
+		 * @param value the new value of the field.
+		 *      field将被设置的新值
+		 * @see #putIntVolatile(Object,long,int)
 		  public native void putOrderedInt(Object obj, long offset, int value);
-		   */
+		 */
 		UNSAFE.putOrderedInt(availableBuffer, bufferAddress, flag);
 	}
 
@@ -393,6 +394,10 @@ public final class MultiProducerSequencer extends AbstractSequencer
 
 	/**
 	 * 可用性
+	 * calculateAvailabilityFlag是获取当前是圈了. 
+                    因为indexShift = Util.log2(bufferSize); 
+                   这里的bufferSize和RingBuffer的bufferSize是一样的 
+        >>> indexShift和log2操作是对应的.sequence右移indexShift位,其实即时除以了数组的大小,意思就是第几圈了. 
 	 */
 	private int calculateAvailabilityFlag(final long sequence)
 	{
